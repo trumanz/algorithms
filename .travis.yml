@@ -1,0 +1,12 @@
+sudo: required
+dist: trusty
+
+language: cpp
+
+compiler: gcc
+
+before_script:
+-  ./install-dependency.sh
+
+script:
+-  ./run-all.sh
