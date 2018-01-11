@@ -1,2 +1,4 @@
-#!/bin/sh
-echo "run"
+#!/bin/bash
+source ./dev.env
+cd src 
+./build.sh
