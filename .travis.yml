@@ -6,7 +6,7 @@ language: cpp
 compiler: gcc
 
 before_script:
--  ./install-dependency.sh
+-  cd ./env_prepare/ && ./prepare_env.sh
 
 script:
 -  ./run-all.sh
