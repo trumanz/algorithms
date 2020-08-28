@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(cpp-alg)
+project(cpp-algo)
 set(ROOT_PATH ${CMAKE_SOURCE_DIR})
 
 
