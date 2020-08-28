@@ -19,4 +19,5 @@ steps:
 - bash: |
       source activate algenv
       pip install -U ortools
-  displayName: install ortools
+      python  prepare_dev_env.py
+  displayName: prepare dev environment
