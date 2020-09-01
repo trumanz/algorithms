@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(cpp-algo)
 set(ROOT_PATH ${CMAKE_SOURCE_DIR})
 
+set (CMAKE_CXX_STANDARD 11)
 
 
 function(add_source_files dir regex_name dst)
