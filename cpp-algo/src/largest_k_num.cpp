@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <random>
 #include <iostream>
+#include <stack>
+#include <set>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -9,13 +11,17 @@
 
 class LargestKNum{
 public:
-    int swap_count;
+    uint64_t swap_count;
     bool debug;
+    std::string debug_str;
     int num_len;
     int* num_;
     LargestKNum(bool _debug = false){
          this->swap_count = 0;
          this->debug  = _debug;
+    }
+    void qsort(std::vector<int>& arr) {
+         qsort(&arr[0], arr.size());
     }
     void qsort(int* num, int len) {
          if(num == NULL || len <= 0) return; 
@@ -23,6 +29,33 @@ public:
          this->num_ = num;
          debugPrint(NULL);
          qsort_imp(num, 0, len-1);
+   }
+   LargestKNum& qsortV2(int* num, int len) {
+        if(num == NULL || len <= 0) return *this; 
+        this->num_len = len;
+        this->num_ = num;
+        std::set<int> pis;
+        if(this->debug) this->debug_str += this->genDebugStr(pis);
+        std::stack<std::pair<int, int> >  partation_stack;
+        int L = 0;
+        int R = len -1;
+        partation_stack.push(std::pair<int,int>(L,R));
+        while(!partation_stack.empty()) {
+             std::pair<int, int>& LR = partation_stack.top();
+             int L = LR.first;
+             int R = LR.second;
+             int i = partitionV2(num, L, R);
+             if(this->debug)  {
+                  pis.insert(i);
+                  this->debug_str += "\n";
+                  this->debug_str += this->genDebugStr(pis) ;
+             }
+             partation_stack.pop();
+             if(i > L+1) partation_stack.push(std::pair<int,int>(L, i-1));
+             if(i+1 < R) partation_stack.push(std::pair<int, int>(i+1, R));
+        }
+        return *this;
+
    }
 // K is from 0
    int largestK(int* num, int len ,int k) {
@@ -39,6 +72,13 @@ private:
           }
           printf("\n");
    }
+   std::string genDebugStr(const std::set<int>& pis) {
+        std::stringstream ss;
+        for(int i = 0; i < num_len; i++) {
+              ss << num_[i] <<  ( pis.count(i) ? "^" : "")  << " ,";
+        }
+        return ss.str();
+   }
    void largestK_imp(int* num, int L, int R, int K) {
         if(L < R) {
              int i = partition(num, L, R);
@@ -54,6 +94,7 @@ private:
              
         }
    }
+   
    void qsort_imp(int* num, int L, int R) {
         if(L < R) {
              int i = partition(num, L, R);
@@ -64,7 +105,7 @@ private:
    }
    int partition(int* num, int L, int R) {
         if(L > R) return -1;
-        if(debug) printf("L=%d, R=%d, num[L]=%d, num[R]=%d\n",L, R, num[L], num[R]);
+        //if(debug) printf("L=%d, R=%d, num[L]=%d, num[R]=%d\n",L, R, num[L], num[R]);
         int pivot = num[R];
         int i = L-1; //i+1 is the lower bound of pivot
         //TODO too much swap 
@@ -78,6 +119,27 @@ private:
         if(  i+1 != R)  swap(num[i+1], num[R]);
         return i+1;
    }
+      int partitionV2(int* num, int L, int R) {
+        if(L > R) return -1;
+        //if(debug) printf("L=%d, R=%d, num[L]=%d, num[R]=%d\n",L, R, num[L], num[R]);
+        int pivot = num[R];
+        int h = R-1;
+        //after loop, left of L are all less than pivot
+        while(L <= h) {
+             while(num[L] < pivot) L++;
+             while(num[h] >= pivot) {
+                  if(h >= L) h--;
+                  else break;
+             }
+             if(L < h) {
+                  swap(num[L++], num[h--]);
+             }
+             
+        }
+        //now i+1 is the first num equal or greter than pivot
+        if(  L != R)  swap(num[L], num[R]);
+        return L;
+   }
    template<typename T>
    void swap(T& a, T&b){
         ++swap_count;
@@ -90,37 +152,24 @@ private:
 
 
 TEST(LargestKNum, qsort_random_test){
-
-     
-    std::random_device rd; 
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> len_distr(0, 50);
-    std::uniform_int_distribution<> num_distr(0, 100);
-
-
+    RandomData rd;
     for(size_t i = 0; i < 100000; i++) {
-        int len = len_distr(gen);
-        int* arr = (int*)malloc(len*sizeof(int));
-        int* arr2 =  (int*)malloc(len*sizeof(int));
-        for(int j = 0; j < len; j++) {
-            int n = num_distr(gen);
-            arr[j] = n;
-            arr2[j] = n;
-        }
-        LargestKNum(false).qsort(arr, len);
-        std::sort(arr2, arr2+len);
+        const std::vector<int> arr =  rd.genRandomArray(0,50, 0,100);
+        std::vector<int> arr_4_qsort =  arr;
+        std::vector<int> arr_4_qsort_v2 =  arr;
+        std::vector<int> arr_4_std_sort = arr;
 
-        for(int j = 0; j < len; j++) {
-             ASSERT_EQ(arr[j], arr2[j]);
-        }
+        LargestKNum(false).qsort(arr_4_qsort);
+        LargestKNum(false).qsortV2(&arr_4_qsort_v2[0], arr_4_qsort_v2.size());
+        std::sort(arr_4_std_sort.begin(), arr_4_std_sort.end());
 
-        free(arr);
-        free(arr2);
+        for(size_t j = 0; j < arr.size(); j++) {
+             ASSERT_EQ(arr_4_qsort[j], arr_4_std_sort[j]);
+             std::vector<int> debug_arr = arr;
+             ASSERT_EQ(arr_4_qsort_v2[j], arr_4_std_sort[j]) <<  LargestKNum(true).qsortV2(&debug_arr[0], debug_arr.size()).debug_str;
+        }
+ 
     }
-
-
-      
-
 
 };
 
@@ -149,5 +198,39 @@ TEST(LargestKNum, random_test){
           ASSERT_EQ(result_k_num, y[k]); 
           free(arr);
      }
-     
 };
+ 
+
+class PerfTest : public ::testing::Test {
+protected:
+   //Time used by SetUpTestCase would not accumulated to TEST_F
+   static std::vector<std::vector<int> > arr_arr;
+   static void SetUpTestCase()  {
+        RandomData rd;
+        for(size_t i = 0; i < 5000; i++) {
+          std::vector<int> x1 = rd.genRandomArray(10000,20000, 0,20000) ;
+          arr_arr.emplace_back(x1);
+     }
+   }
+};
+
+std::vector<std::vector<int> > PerfTest::arr_arr;
+
+TEST_F(PerfTest, qsort) {
+     LargestKNum lk;
+     for(size_t i = 0; i < arr_arr.size(); i++) {
+          std::vector<int> x1 = arr_arr[i] ;
+          lk.qsort(x1);
+     }
+     printf("swap_count=%lu\n", lk.swap_count);
+}
+
+TEST_F(PerfTest, qsortV2) {
+     LargestKNum lk;
+     for(size_t i = 0; i < arr_arr.size(); i++) {
+          std::vector<int> x1 = arr_arr[i] ;     
+          lk.qsortV2(&x1[0], x1.size());
+     }
+     printf("swap_count=%lu\n", lk.swap_count);
+
+}

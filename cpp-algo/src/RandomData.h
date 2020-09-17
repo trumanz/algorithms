@@ -9,11 +9,11 @@
 
 class RandomData{
 private:
-     std::random_device rd;
-     std::mt19937 gen;
+     
+     std::mt19937_64 gen;
 public:
-     RandomData(){
-         gen = std::mt19937(rd());
+     RandomData(unsigned seed = 0){
+         gen = std::mt19937_64(seed);
      }
      int genRandomInt(int min, int max) {
          return std::uniform_int_distribution<>(min, max)(gen);
