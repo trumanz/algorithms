@@ -4,6 +4,8 @@ project(cpp-algo)
 set(ROOT_PATH ${CMAKE_SOURCE_DIR})
 
 set (CMAKE_CXX_STANDARD 11)
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+set( CMAKE_VERBOSE_MAKEFILE on )
 
 
 function(add_source_files dir regex_name dst)
@@ -21,6 +23,7 @@ add_source_files(${CMAKE_CURRENT_SOURCE_DIR}/src *.cpp  CPP_FILES)
 add_executable(${PROJECT_NAME} ${CPP_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../3pp/tabulate/include)
 
 if( WIN32 )
     set(__depend_libs gtest pthread)

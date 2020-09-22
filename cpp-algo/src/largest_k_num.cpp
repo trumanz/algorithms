@@ -201,31 +201,32 @@ TEST(LargestKNum, random_test){
 };
  
 
-class PerfTest : public ::testing::Test {
+class LargestKNunPerf : public ::testing::Test {
 protected:
    //Time used by SetUpTestCase would not accumulated to TEST_F
    static std::vector<std::vector<int> > arr_arr;
    static void SetUpTestCase()  {
         RandomData rd;
-        for(size_t i = 0; i < 5000; i++) {
+        for(size_t i = 0; i < 500; i++) {
           std::vector<int> x1 = rd.genRandomArray(10000,20000, 0,20000) ;
           arr_arr.emplace_back(x1);
      }
    }
 };
 
-std::vector<std::vector<int> > PerfTest::arr_arr;
+std::vector<std::vector<int> > LargestKNunPerf::arr_arr;
 
-TEST_F(PerfTest, qsort) {
+TEST_F(LargestKNunPerf, qsort_perf) {
      LargestKNum lk;
      for(size_t i = 0; i < arr_arr.size(); i++) {
           std::vector<int> x1 = arr_arr[i] ;
+          //printf("i=%d\n", i) ;
           lk.qsort(x1);
      }
      printf("swap_count=%lu\n", lk.swap_count);
 }
 
-TEST_F(PerfTest, qsortV2) {
+TEST_F(LargestKNunPerf, qsortv2_perf) {
      LargestKNum lk;
      for(size_t i = 0; i < arr_arr.size(); i++) {
           std::vector<int> x1 = arr_arr[i] ;     

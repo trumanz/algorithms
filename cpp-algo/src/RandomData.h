@@ -6,6 +6,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <atomic> 
+#include <assert.h>
+
+class IntType4Test {
+public:
+static std::atomic<int64_t>  constructor_count;
+static std::atomic<int64_t>  copy_assignment_count;
+static std::atomic<int64_t>  less_operator_count;
+
+public:
+    int value;
+public:
+    IntType4Test(int v) {
+        this->value = v;
+        constructor_count++;
+        //uint64_t c = constructor_count;
+        //printf("%d, %lu\n", v, c);
+    }
+    IntType4Test(const IntType4Test& oth)  : IntType4Test(oth.value){
+    }
+    IntType4Test& operator=(const IntType4Test& oth) {
+        if(this != &oth) {
+            copy_assignment_count++;
+            this->value = oth.value;
+        }
+        return *this;
+    }
+    bool operator<(const IntType4Test& oth) const{
+        less_operator_count++;
+        return this->value < oth.value;
+    }
+
+public:
+    static void initCount();
+    static std::string getCountInfo();
+    
+};
 
 class RandomData{
 private:
@@ -14,6 +51,7 @@ private:
 public:
      RandomData(unsigned seed = 0){
          gen = std::mt19937_64(seed);
+         //gen = std::minstd_rand(seed);
      }
      int genRandomInt(int min, int max) {
          return std::uniform_int_distribution<>(min, max)(gen);
@@ -26,9 +64,10 @@ public:
          return x;
      }
 
-     std::vector<int> genRandomArray(int min_size, int max_size, 
+     std::vector<int> genRandomArray(int arr_len_lb, int arr_len_ub, 
                                      int min_element, int max_element) {
-         int len = std::uniform_int_distribution<>(min_size, max_size)(gen);
+         assert(arr_len_lb <= arr_len_ub);
+         int len = arr_len_ub == arr_len_ub ? arr_len_ub: std::uniform_int_distribution<>(arr_len_lb, arr_len_ub)(gen);
          std::vector<int> arr(len, 0);
          for(int i = 0 ; i < len ; i++) {
              int element = std::uniform_int_distribution<>(min_element, max_element)(gen);
