@@ -8,13 +8,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "RandomData.h"
-#include "tabulate/table.hpp"
 #include <chrono>
 #include <boost/sort/sort.hpp>
-
+#include "CppConsoleTable.hpp"
 
 using namespace std;
-
+using namespace samilton;
 class SortPerf : public ::testing::Test {
 protected:
    //Time used by SetUpTestCase would not accumulated to TEST_F
@@ -35,7 +34,6 @@ protected:
 std::vector<std::vector<IntType4Test> > SortPerf::arr_arr;
 
 
-using Row_t = std::vector<variant<std::string, const char *, tabulate::Table>>;
 
 template<typename T>
 std::string toHumanStr(const T& d)
@@ -52,9 +50,9 @@ std::string toHumanStr(const T& d)
      return buf;
 } 
 
-Row_t getIntType4TestCount(size_t arr_size)
+std::vector<std::string> getIntType4TestCount(size_t arr_size)
 {
-     Row_t row;
+     std::vector<std::string> row;
      assert(arr_size > 0);
      row.push_back( toHumanStr(arr_size) );
      int64_t count;
@@ -76,14 +74,13 @@ Row_t getIntType4TestCount(size_t arr_size)
 
 TEST_F(SortPerf, sort_rand_and_sorted_data){
 
-    tabulate::Table  table;
-
-     Row_t header= {"size",
+    ConsoleTable   table;
+    std::vector<std::string> header= {"size",
         "less", "times",
          "constr", "times",
          "copy", "times",  "ms"};
     
-    table.add_row(header);
+    table.addRow(header);
     for(std::vector<IntType4Test>& arr : SortPerf::arr_arr) {
          std::vector<IntType4Test> arr2 = arr;
          
@@ -91,16 +88,12 @@ TEST_F(SortPerf, sort_rand_and_sorted_data){
          auto start = std::chrono::high_resolution_clock::now();
          std::stable_sort(arr2.begin(), arr2.end());
          auto end = std::chrono::high_resolution_clock::now();
-         Row_t row = getIntType4TestCount(arr2.size());
+         auto row = getIntType4TestCount(arr2.size());
          int64_t  micro_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
          row.push_back(std::to_string( micro_seconds));
-         table.add_row(row);
+         table.addRow(row);
     }
 
-   
-   
-
-    printf("%s\n", table.str().c_str());
-
+     std::cout << table << "\n";
 };
 

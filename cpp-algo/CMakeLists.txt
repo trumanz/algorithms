@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(cpp-algo)
 set(ROOT_PATH ${CMAKE_SOURCE_DIR})
 
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set( CMAKE_VERBOSE_MAKEFILE on )
 

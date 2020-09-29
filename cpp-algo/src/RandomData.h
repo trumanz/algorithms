@@ -8,6 +8,18 @@
 #include <ctype.h>
 #include <atomic> 
 #include <assert.h>
+#include <sstream>
+
+template<typename T>
+std::string join_str(T begin, T end, std::string separator = ",")
+{
+    std::stringstream ss;
+    while(begin != end) {
+        ss << *begin;
+        if(++begin != end) ss << separator;
+    }
+    return ss.str();
+}
 
 class IntType4Test {
 public:
