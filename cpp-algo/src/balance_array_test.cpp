@@ -59,11 +59,29 @@ public:
           balanceRecursiveImp(i+1, cur_sum, half_arr);
      }
      
-     //define bool dp[i][j],  
-     //possibility  of a sub arr end with index i and it's sum it j;    
+     /*
+     define bool dp[i][j],  
+     possibility  of a sub arr end with index i and it's sum it j;
+     dp[i][j] = dp[i-1][j-n[i]] ...or... dp[0][j-n[i]]      when  j-n[i] > 0 and i -1 >=0;
+
+     so, when  dp[i][j] is true;
+     dp[i+1][j + n[i+1]],   dp[i+2][j + n[i+1]] ... dp[i+x][j + n[i+1]]
+    
+
      void balanceDynamicProgramming() {
-          
+          if(n.size() == 0) return;
+          if(n.size() == 1) {
+               this->half_n.push_back(n[0]) ;
+               return;
+          } 
+          vector< vector<bool> > dp;
+          dp.resize(n.size()- 1, vector<bool>(n_sum, false));
+          for(size_t i = 0; i < n.size()) {
+               dp[i][n[i]] = true;
+          }
+
      }
+      */
      
 };
 
