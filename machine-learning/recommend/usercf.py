@@ -12,18 +12,14 @@ class MoviePref():
         return self.perf < oth.perf
 
 class UserCF:
-    def recommend(self, train_movie_user_dict, test_users):
+    def train(self, train_movie_user_dict):
+        self.train_movie_user_dict = train_movie_user_dict
         print("calculating user similarity")
-        weight_of_user_similarity = self.cal_user_similarity(train_movie_user_dict)
-        recommendation = {}
-        print("calculating movie recommendation")
-        for user in tqdm(test_users):
-           movies = self.cal_recommend(user, train_movie_user_dict, weight_of_user_similarity, 4, 10)
-           recommendation[user] = movies
-        return recommendation
+        self.weight_of_user_similarity = self.__cal_user_similarity(train_movie_user_dict)
+
        
     #calculator user similarity
-    def cal_user_similarity(self, movie_user_dict):
+    def __cal_user_similarity(self, movie_user_dict):
       from collections import defaultdict
       count_same_movie = defaultdict(defaultdict)  #C[i][j] represent same movie count of user i and j
       weight_of_similarity = defaultdict(defaultdict)
@@ -46,17 +42,17 @@ class UserCF:
             weight_of_similarity[i][j] = count / denominator
       return weight_of_similarity
 
-    def cal_recommend(self, user, movie_user_dict, weight_of_user_similarity, k, n):
+    def recommend(self, user, k, n):
       first_n_movies = []
-      if user not in weight_of_user_similarity:
+      if user not in self.weight_of_user_similarity:
           return first_n_movies
-      us = weight_of_user_similarity[user]
+      us = self.weight_of_user_similarity[user]
       first_k_similar_user = [(u,w) for u, w in sorted(us.items(), key=lambda kv : kv[1], reverse=False)]
       first_k_similar_user = first_k_similar_user[0:k]
 
-      for movie in movie_user_dict:
+      for movie in self.train_movie_user_dict:
         pref = 0.0
-        users_of_movie = movie_user_dict[movie]
+        users_of_movie = self.train_movie_user_dict[movie]
         if  user in users_of_movie:
              continue
         for  user, weight_of_similary in first_k_similar_user:
