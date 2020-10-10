@@ -79,7 +79,7 @@ public:
      std::vector<int> genRandomArray(int arr_len_lb, int arr_len_ub, 
                                      int min_element, int max_element) {
          assert(arr_len_lb <= arr_len_ub);
-         int len = arr_len_ub == arr_len_ub ? arr_len_ub: std::uniform_int_distribution<>(arr_len_lb, arr_len_ub)(gen);
+         int len = arr_len_lb == arr_len_ub ? arr_len_ub: std::uniform_int_distribution<>(arr_len_lb, arr_len_ub)(gen);
          std::vector<int> arr(len, 0);
          for(int i = 0 ; i < len ; i++) {
              int element = std::uniform_int_distribution<>(min_element, max_element)(gen);

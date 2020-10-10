@@ -31,7 +31,8 @@ public:
           this->best_half_gap = INT32_MAX;
           this->half_n.clear();
           vector<uint32_t> half_arr;
-          balanceRecursiveImp(0,0, half_arr);
+          //balanceRecursiveImp(0,0, half_arr);
+          balanceDynamicProgramming();
           return half_n;
      } 
 
@@ -60,28 +61,46 @@ public:
      }
      
      /*
-     define bool dp[i][j],  
-     possibility  of a sub arr end with index i and it's sum it j;
+     define bool dp[i][j],  represent possibility  of a sub arr end with index i and it's sum is j;
      dp[i][j] = dp[i-1][j-n[i]] ...or... dp[0][j-n[i]]      when  j-n[i] > 0 and i -1 >=0;
 
-     so, when  dp[i][j] is true;
-     dp[i+1][j + n[i+1]],   dp[i+2][j + n[i+1]] ... dp[i+x][j + n[i+1]]
-    
 
-     void balanceDynamicProgramming() {
+     so, when  dp[i][j] is true;
+     dp[i+1][j + n[i+1]],   dp[i+2][j + n[i+2]] ... dp[i+x][j + n[i+x]]  are all true
+    */
+      void  balanceDynamicProgramming() { 
           if(n.size() == 0) return;
           if(n.size() == 1) {
                this->half_n.push_back(n[0]) ;
                return;
           } 
-          vector< vector<bool> > dp;
-          dp.resize(n.size()- 1, vector<bool>(n_sum, false));
-          for(size_t i = 0; i < n.size()) {
-               dp[i][n[i]] = true;
+          const uint32_t half_sum = n_sum/2;
+          if(half_sum < 1) return;
+
+          vector< vector<bool> > dp(n.size(), vector<bool>(half_sum, false));
+
+          for(size_t i = 0; i < n.size(); i++) {
+               uint32_t sum = n[i];
+               if(sum < half_sum ) dp[i][sum] = true;
+               else continue;
+               for(size_t  x = 1;  x + sum < half_sum ; x++) {
+                     for(size_t k = 0; k + 1 < i ; k++) {
+                         if( dp[k][x] )  dp[i][ x+sum ] = true;
+                         break;
+                    }
+               }
           }
 
+          for(size_t j = half_sum ; j >0; j--) {
+               for(size_t i = 0; i < n.size(); i++){
+                    if(dp[i][j-1]) {
+                         printf("half sum : %lu\n",j-1);
+                         break;
+                    }
+               }
+          }
      }
-      */
+      
      
 };
 
@@ -104,7 +123,7 @@ TEST(BalanceArray_test, simple_test){
      for(size_t i = 0 ; i + 1 < arr2.size(); i+=2) {
           //std::cout << "balance: " << join_str(arr2[i].begin(), arr2[i].end()) <<"\n";
           auto ha = BalanceArray().balance(arr2[i]);
-          ASSERT_EQ(ha, arr2[i+1]) << i;
+          EXPECT_EQ(ha, arr2[i+1]) << i;
      }
  
 };

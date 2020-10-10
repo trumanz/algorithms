@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 project(cpp-algo)
 set(ROOT_PATH ${CMAKE_SOURCE_DIR})
 
+
+set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -g -O2 -Wall  -fdiagnostics-show-option -fopenmp -Werror=return-type -Werror=return-local-addr")
+
+
 set (CMAKE_CXX_STANDARD 17)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set( CMAKE_VERBOSE_MAKEFILE on )
