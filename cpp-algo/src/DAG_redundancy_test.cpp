@@ -66,7 +66,7 @@ class DAGRedundancyCheckerV1 {
         auto graph = buildGraph(edges);
         for(auto& edge :  edges) {
             int longest = searchLongestPath(graph, edge.src, edge.dst);
-            std::cout <<  edge.src << "-->" << edge.dst  << ",longest=" << longest <<"\n";
+            //std::cout <<  edge.src << "-->" << edge.dst  << ",longest=" << longest <<"\n";
              if( longest > 1) {
                  redundancy_edges.push_back(edge);
              }
@@ -99,10 +99,9 @@ TEST(DAGRedundancyCheckerV1, simple_test){
 
     ASSERT_EQ(red_edges.size(), 3); 
 
-  
-   // ASSERT_EQ(std::find(red_edges.begin(), red_edges.end(), Edge('A', 'C')), true);
-   // ASSERT_EQ(std::find(red_edges.begin(), red_edges.end(), Edge('B', 'D')), true);
-   // ASSERT_EQ(std::find(red_edges.begin(), red_edges.end(), Edge('C', 'E')), true);
+    ASSERT_EQ(std::find(red_edges.begin(), red_edges.end(), Edge('A', 'C')) != red_edges.end(), true);
+    ASSERT_EQ(std::find(red_edges.begin(), red_edges.end(), Edge('B', 'D')) != red_edges.end(), true);
+    ASSERT_EQ(std::find(red_edges.begin(), red_edges.end(), Edge('C', 'E')) != red_edges.end(), true);
 
     //ASSERT_THAT(red_edges, Elements)
       
