@@ -31,6 +31,7 @@ protected:
 };
 #if 0
 //TODO
+https://zhuanlan.zhihu.com/p/30959069  knapsack problem ,solve
 class DPBalanceArray : public ArrayBalancer {
     const vector<uint32_t> *p_num_arr;
     uint32_t n_sum;

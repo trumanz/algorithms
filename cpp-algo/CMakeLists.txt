@@ -48,4 +48,6 @@ endif()
 
 
 find_package(GTest CONFIG REQUIRED)
-target_link_libraries(cpp-algo  GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+target_link_libraries(${PROJECT_NAME}  GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+find_package(Boost COMPONENTS date_time REQUIRED )
+target_link_libraries(${PROJECT_NAME}  ${Boost_LIBRARIES})
