@@ -4,7 +4,7 @@ project(cpp-algo)
 set(ROOT_PATH ${CMAKE_SOURCE_DIR})
 
 
-set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -g -O2 -Wall  -fdiagnostics-show-option -fopenmp -Werror=return-type -Werror=return-local-addr")
+set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -g -O2 -Wall  -fdiagnostics-show-option  -Werror=return-type -Werror=return-local-addr")
 
 
 set (CMAKE_CXX_STANDARD 17)
@@ -30,10 +30,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../3pp/tabulate/include)
 
 if( WIN32 )
-    set(__depend_libs gtest pthread)
+    set(__depend_libs  pthread)
     generate_gen_lib("${__depend_libs}" depend_libs d)
 else()
-    set(depend_libs gtest pthread)
+    set(depend_libs  pthread)
 endif()
 
 
@@ -47,3 +47,5 @@ if(WIN32)
 endif()
 
 
+find_package(GTest CONFIG REQUIRED)
+target_link_libraries(cpp-algo  GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)

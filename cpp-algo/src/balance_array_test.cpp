@@ -103,7 +103,7 @@ public:
       
      
 };
-
+#if 0
 TEST(BalanceArray_test, simple_test){
      RandomData rd;
      vector< vector<uint32_t> > arr2 = {
@@ -128,7 +128,7 @@ TEST(BalanceArray_test, simple_test){
  
 };
  
-#if 0 
+
 TEST(BalanceArray_test, random_test){
      RandomData rd;
      for(size_t i = 0 ; i < 10; i++) {
