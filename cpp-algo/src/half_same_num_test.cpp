@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "RandomData.h"
+#include "utility/RandomData.h"
 using namespace std;
 class HalfSameNum{
 public:

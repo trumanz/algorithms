@@ -8,10 +8,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "RandomData.h"
+#include "utility/RandomData.h"
 #include <chrono>
 #include <boost/sort/sort.hpp>
-#include "CppConsoleTable.hpp"
+#include "utility/CppConsoleTable.hpp"
 
 using namespace std;
 

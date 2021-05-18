@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "RandomData.h"
+#include "utility/RandomData.h"
 #include <stdint.h>
 
 using namespace std;
@@ -127,8 +127,8 @@ TEST(BalanceArray_test, simple_test){
      }
  
 };
- 
-
+#endif
+#if 0
 TEST(BalanceArray_test, random_test){
      RandomData rd;
      for(size_t i = 0 ; i < 10; i++) {
