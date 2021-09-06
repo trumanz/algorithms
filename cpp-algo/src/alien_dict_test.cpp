@@ -1,15 +1,8 @@
 #include "gtest/gtest.h"
 #include <algorithm>
 #include <random>
-#include <iostream>
-#include <stack>
 #include <set>
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include "utility/RandomData.h"
-#include <chrono>
-#include <boost/sort/sort.hpp>
 #include "utility/CppConsoleTable.hpp"
 
 using namespace std;
